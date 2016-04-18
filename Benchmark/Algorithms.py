@@ -96,7 +96,7 @@ def percentOfRightPredictions(predictList, testList, errorLevel):
     percent = float(rightPredictions)/float(totalCount)
     return (percent*100)
 
-dirPath="E:/Google_Data/processed"
+"""dirPath="E:/Google_Data/processed"
 chdir(dirPath)
 
 lineCount = 1
@@ -120,7 +120,7 @@ with open('usage_1_minute_total_converted_no_duplicates.csv', 'r') as f:
 
 for i in xrange(len(cpuUsage)):
     cpuUsage[i] = float(cpuUsage[i])
-    memUsage[i] = float(memUsage[i])
+    memUsage[i] = float(memUsage[i])"""
 
 """print(len(cpuUsage))
 
@@ -137,7 +137,9 @@ print('level 100: ',percentOfRightPredictions(predictList, testList, 100))
 
 plot2Lines(predictList, 'predict', testList, 'test')"""
 
-list = [1,3,5,6,7,9,3,4]
+print (platform.processor())
+
+"""list = [1,3,5,6,7,9,3,4]
 predictionList, testList = ema(list,4,0.9,3,2)
 print('testList: ', testList)
-print('predictionList: ', predictionList)
+print('predictionList: ', predictionList)"""

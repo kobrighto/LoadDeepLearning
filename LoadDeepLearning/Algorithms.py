@@ -7,15 +7,16 @@ import csv
 import sys
 import math
 from pandas import ewma
+import DataPostProcessing
 
 def regressiveStep(inputList, paramsList):
-    paramsList_reverse = paramsList[::-1]
+    #paramsList_reverse = paramsList[::-1]
     prediction = 0
-    for i in xrange(len(paramsList_reverse)):
+    for i in xrange(len(paramsList)):
         if i==0:
-            prediction+=paramsList_reverse[i]
+            prediction+=paramsList[i]
         else:
-            prediction+=paramsList_reverse[i]*inputList[len(inputList)-i]
+            prediction+=paramsList[i]*inputList[len(inputList)-i]
     return prediction
 
 #curPoint always starts at 0 (curPoint for easier implementation)
@@ -90,56 +91,31 @@ def percentOfRightPredictions(predictList, testList, errorLevel):
     for i in xrange(len(predictList)):
         for j in xrange(len(predictList[i])):
             totalCount+=1
-            error = (predictList[i][j]-testList[i+j])/testList[i+j]
-            if abs(error)*100<errorLevel:
+            error = (predictList[i][j]-testList[i+j])
+            if abs(error)*100<(errorLevel+testList[i+j]):
                 rightPredictions+=1
     percent = float(rightPredictions)/float(totalCount)
     return (percent*100)
 
-"""dirPath="E:/Google_Data/processed"
-chdir(dirPath)
+cpuList, memList = DataPostProcessing.meanLoad(1,10)
 
-lineCount = 1
+print(len(cpuList))
+print(len(memList))
 
-csv.field_size_limit(sys.maxint)
-cpuUsage = []
-memUsage = []
+predictList,testList = autoRegression(cpuList,int(0.75*(len(cpuList))),7,1)
 
-with open('usage_1_minute_total_converted_no_duplicates.csv', 'r') as f:
-    reader = csv.reader(f)
-    for line in reader:
-        if lineCount>1:
-            break
-        cpuUsage = line[4].split(',')
-        cpuUsage[0]=cpuUsage[0][1:]
-        cpuUsage[len(cpuUsage)-1]=cpuUsage[len(cpuUsage)-1][:-1]
-        memUsage = line[5].split(',')
-        memUsage[0]=memUsage[0][1:]
-        memUsage[len(memUsage)-1]=memUsage[len(memUsage)-1][:-1]
-        lineCount+=1
+#plot2Lines(predictList, 'prediction', testList, 'test')
 
-for i in xrange(len(cpuUsage)):
-    cpuUsage[i] = float(cpuUsage[i])
-    memUsage[i] = float(memUsage[i])"""
-
-"""print(len(cpuUsage))
-
-predictList,testList = autoRegression(cpuUsage,31320,-1,3)
-
-print(averageMSE(predictList, testList, True))
+print('averageMSE of AR:', averageMSE(predictList, testList, True))
 
 print('level 5: ',percentOfRightPredictions(predictList, testList, 5))
-print('level 25: ',percentOfRightPredictions(predictList, testList, 25))
-print('level 45: ',percentOfRightPredictions(predictList, testList, 45))
-print('level 65: ',percentOfRightPredictions(predictList, testList, 65))
-print('level 85: ',percentOfRightPredictions(predictList, testList, 85))
-print('level 100: ',percentOfRightPredictions(predictList, testList, 100))
+print('level 10: ',percentOfRightPredictions(predictList, testList, 10))
+print('level 15: ',percentOfRightPredictions(predictList, testList, 15))
 
-plot2Lines(predictList, 'predict', testList, 'test')"""
+predictList, testList = ema(cpuList,int(0.75*(len(cpuList))),0.95,20,1)
 
-print (platform.processor())
+print('averageMSE of EMA:', averageMSE(predictList, testList, True))
 
-"""list = [1,3,5,6,7,9,3,4]
-predictionList, testList = ema(list,4,0.9,3,2)
-print('testList: ', testList)
-print('predictionList: ', predictionList)"""
+print('level 5: ',percentOfRightPredictions(predictList, testList, 5))
+print('level 10: ',percentOfRightPredictions(predictList, testList, 10))
+print('level 15: ',percentOfRightPredictions(predictList, testList, 15))

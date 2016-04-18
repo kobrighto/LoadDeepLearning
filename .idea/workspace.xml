@@ -33,6 +33,21 @@
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
+=======
+      <file leaf-file-name="ModelBuilder.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/LoadDeepLearning/ModelBuilder.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.5033557">
+              <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#37#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+>>>>>>> 022fa98a997a452c9b097959ce6fb8f01e226a8e
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -299,5 +314,18 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+=======
+    <entry file="file://$PROJECT_DIR$/LoadDeepLearning/ModelBuilder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5033557">
+          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+>>>>>>> 022fa98a997a452c9b097959ce6fb8f01e226a8e
   </component>
 </project>

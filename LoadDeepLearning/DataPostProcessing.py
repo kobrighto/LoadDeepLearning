@@ -50,3 +50,59 @@ def meanLoad(lineNo, noOfMinutes):
         meanMemList.append(sumCPU/noOfMinutes)
         i+=noOfMinutes
     return (meanCPUList, meanMemList)
+
+#meanLabel: labels are made from mean of ? number of load values
+def makeTrainTestLists(cpuList,memList,meanLabel,markPoint,length,times):
+    traincpuList = cpuList[:markPoint]
+    trainmemList = memList[:markPoint]
+    testcpuList = cpuList[markPoint-length+1:]
+    testmemList = memList[markPoint-length+1:]
+    finaltraincpuList =[]
+    finaltrainmemList = []
+    finaltestcpuList = []
+    finaltestmemList = []
+    for i in xrange(len(traincpuList)-length+1):
+        subcpuList = []
+        submemList = []
+        for j in xrange(length):
+            subcpuList.append(traincpuList[i+j])
+            submemList.append(trainmemList[i+j])
+        finaltraincpuList.append(subcpuList)
+        finaltrainmemList.append(submemList)
+    for i in xrange(len(testcpuList)-meanLabel-length+1):
+        subcpuList = []
+        submemList = []
+        for j in xrange(length):
+            subcpuList.append(testcpuList[i+j])
+            submemList.append(testmemList[i+j])
+        finaltestcpuList.append(subcpuList)
+        finaltestmemList.append(submemList)
+    finaltraincpulabels = []
+    finaltrainmemlabels = []
+    for i in xrange(length,len(traincpuList)+1,1):
+        sumcpu = 0
+        summem = 0
+        for j in xrange(meanLabel):
+            sumcpu+=float(cpuList[i+j])
+            summem+=float(memList[i+j])
+        finaltraincpulabels.append(sumcpu/meanLabel)
+        finaltrainmemlabels.append(summem/meanLabel)
+    finaltestcpulabels = []
+    finaltestmemlabels = []
+    for i in xrange(length,len(testcpuList)-meanLabel+1,1):
+        sumcpu = 0
+        summem = 0
+        for j in xrange(meanLabel):
+            sumcpu+=float(testcpuList[i+j])
+            summem+=float(testmemList[i+j])
+        finaltestcpulabels.append(sumcpu/meanLabel)
+        finaltestmemlabels.append(summem/meanLabel)
+    if times>0:
+        for i in xrange(len(traincpuList)):
+            traincpuList[i]=int(float(traincpuList[i])*times)
+            trainmemList[i]=int(float(trainmemList[i])*times)
+        for i in xrange(len(testcpuList)):
+            testcpuList[i]=int(float(testcpuList[i])*times)
+            testmemList[i]=int(float(testmemList[i])*times)
+    return (finaltraincpuList,finaltrainmemList,finaltestcpuList,finaltestmemList,
+            finaltraincpulabels,finaltrainmemlabels,finaltestcpulabels,finaltestmemlabels)

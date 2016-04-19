@@ -108,7 +108,7 @@ def makeTrainTestLists(cpuList,memList,markPoint,length,times):
         testcpulabels[i]=int(testcpulabels[i]*times)
         testmemlabels[i]=int(testmemlabels[i]*times)"""
 
-cpuList,memList = DataPostProcessing.meanLoad(10,10)
+cpuList,memList = DataPostProcessing.meanLoad(10,1)
 #cpuList, memList = makeLists(10,2)
 print('cpuList length:', len(cpuList))
 
@@ -116,7 +116,7 @@ print('cpuList length:', len(cpuList))
     = makeTrainTestLists(cpuList,memList,16000,50,1)"""
 
 traincpu,trainmem,testcpu,testmem,traincpulabels,trainmemlabels,testcpulabels,testmemlabels \
-    = makeTrainTestLists(cpuList,memList,int(0.75*len(cpuList)),30,1)
+    = DataPostProcessing.makeTrainTestLists(cpuList,memList,5,int(0.75*len(cpuList)),30,1)
 
 """for i in xrange(len(testcpulabels)):
     print(testcpulabels[i])"""

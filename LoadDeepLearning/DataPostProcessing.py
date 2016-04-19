@@ -7,6 +7,8 @@ import sys
 
 if (platform.platform()=='Windows-7-6.1.7601-SP1'):
     dirPath = 'E:/Google_Data/processed'
+elif (platform.platform()=="Linux-3.19.0-25-generic-x86_64-with-Ubuntu-14.04-trusty"):
+    dirPath = '/home/minh/Desktop/Google_Data/processed'
 
 def meanLoad(lineNo, noOfMinutes):
     csv.field_size_limit(sys.maxint)
@@ -29,7 +31,12 @@ def meanLoad(lineNo, noOfMinutes):
                 break
             else:
                 lineCount+=1
-    print('Done 1')
+    #print('Done 1')
+    for i in xrange(len(cpuList)):
+        if float(cpuList[i])>100:
+            cpuList[i]=100
+        if float(memList[i])>100:
+            memList[i]=100
     i = 0
     meanCPUList = []
     meanMemList = []

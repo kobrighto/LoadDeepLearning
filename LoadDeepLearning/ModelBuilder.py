@@ -116,7 +116,7 @@ print('cpuList length:', len(cpuList))
     = makeTrainTestLists(cpuList,memList,16000,50,1)"""
 
 traincpu,trainmem,testcpu,testmem,traincpulabels,trainmemlabels,testcpulabels,testmemlabels \
-    = DataPostProcessing.makeTrainTestLists(cpuList,memList,5,int(0.75*len(cpuList)),30,1)
+    = DataPostProcessing.makeTrainTestLists(cpuList,memList,30,int(0.75*len(cpuList)),30,1)
 
 """for i in xrange(len(testcpulabels)):
     print(testcpulabels[i])"""
@@ -134,8 +134,8 @@ from keras.utils import np_utils
 
 
 batch_size = 5
-nb_classes = 50
-nb_epochs = 200
+nb_classes = 10
+nb_epochs = 100
 hidden_units = 100
 
 learning_rate = 1e-6
@@ -178,10 +178,10 @@ for i in range(len(traincpulabels)-4):
 
 convertedlabels = []
 for i in xrange(len(traincpulabels)):
-    if traincpulabels[i]/2==50:
-        convertedlabels.append(49)
+    if traincpulabels[i]/10==10:
+        convertedlabels.append(9)
     else:
-        convertedlabels.append(int(traincpulabels[i]/2))
+        convertedlabels.append(int(traincpulabels[i]/10))
 
 
 #woo_label_raw = np.array(traincpulabels, np.int32)
@@ -204,7 +204,7 @@ trainList_reshape = trainList.reshape((len(traincpu)),30,1)
 #reshape((number_of_data,30,1))
 
 #new_woo_label = woo_label.reshape(10,2)
-trainList_label_reshape = trainList_label.reshape((len(traincpu),50))
+trainList_label_reshape = trainList_label.reshape((len(traincpu),10))
 #reshape((number_of_data,number_of_classes))
 #number_of_classes = 1001 currently
 
@@ -224,10 +224,10 @@ for i in range(len(testcpulabels)-4):
 
 convertedlabels = []
 for i in xrange(len(testcpulabels)):
-    if traincpulabels[i]/2==50:
-        convertedlabels.append(49)
+    if traincpulabels[i]/10==10:
+        convertedlabels.append(9)
     else:
-        convertedlabels.append(int(traincpulabels[i]/2))
+        convertedlabels.append(int(traincpulabels[i]/10))
 
 #woo_test = np.array(testcpu, np.int32)
 #woo_label_raw_test = np.array(templabels, np.int32)
@@ -239,7 +239,7 @@ testList_label_raw = np. array(convertedlabels, np.int32)
 testList_label = np_utils.to_categorical(testList_label_raw, nb_classes)
 
 testList_reshape = testList.reshape((len(testcpu)),30,1)
-testList_label_reshape = testList_label.reshape(len(testcpu),50)
+testList_label_reshape = testList_label.reshape(len(testcpu),10)
 
 #new_woo_test = woo_test.reshape((len(testcpu),50,1))
 #new_woo_label_test = woo_label_test.reshape(len(testcpu),10)

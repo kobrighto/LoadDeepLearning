@@ -97,7 +97,7 @@ def percentOfRightPredictions(predictList, testList, errorLevel):
     percent = float(rightPredictions)/float(totalCount)
     return (percent*100)
 
-cpuList, memList = DataPostProcessing.meanLoad(1,10)
+cpuList, memList = DataPostProcessing.meanLoad(1,30)
 
 print(len(cpuList))
 print(len(memList))

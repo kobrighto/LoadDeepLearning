@@ -9,7 +9,7 @@ from datetime import datetime
 import platform
 import DataPostProcessing
 
-if (platform.platform()=="Linux-3.19.0-25-generic-x86_64-with-Ubuntu-14.04-trusty"):
+if (platform.node()=="minh/titan"):
     dirPath = '/home/minh/Desktop/Google_Data/processed'
     chdir(dirPath)
     filename = 'usage_1_minute_total_converted_no_duplicates.csv'
@@ -112,14 +112,23 @@ cpuList,memList = DataPostProcessing.meanLoad(10,1)
 #cpuList, memList = makeLists(10,2)
 print('cpuList length:', len(cpuList))
 
-"""traincpu,trainmem,testcpu,testmem,traincpulabels,trainmemlabels,testcpulabels,testmemlabels \
-    = makeTrainTestLists(cpuList,memList,16000,50,1)"""
-
 traincpu,trainmem,testcpu,testmem,traincpulabels,trainmemlabels,testcpulabels,testmemlabels \
     = DataPostProcessing.makeTrainTestLists(cpuList,memList,30,int(0.75*len(cpuList)),30,1)
 
-"""for i in xrange(len(testcpulabels)):
-    print(testcpulabels[i])"""
+"""for i in xrange(len(traincpu)):
+    for j in xrange(len(traincpu[i])):
+        if int(traincpu[i][j]/2)==50:
+            traincpu[i][j]=49
+        else:
+            traincpu[i][j]=int(traincpu[i][j]/2)
+
+for i in xrange(len(testcpu)):
+    for j in xrange(len(testcpu[i])):
+        if int(testcpu[i][j]/2)==50:
+            testcpu[i][j]==49
+        else:
+            testcpu[i][j]=int(testcpu[i][j]/2)"""
+
 
 #keras deep learning from here
 import numpy as np
@@ -131,10 +140,11 @@ from keras.initializations import normal, identity
 from keras.layers.recurrent import SimpleRNN, LSTM
 from keras.optimizers import RMSprop
 from keras.utils import np_utils
+from keras.layers.core import Dropout
 
 
 batch_size = 5
-nb_classes = 10
+nb_classes = 20
 nb_epochs = 100
 hidden_units = 100
 
@@ -178,10 +188,10 @@ for i in range(len(traincpulabels)-4):
 
 convertedlabels = []
 for i in xrange(len(traincpulabels)):
-    if traincpulabels[i]/10==10:
-        convertedlabels.append(9)
+    if traincpulabels[i]/5==20:
+        convertedlabels.append(19)
     else:
-        convertedlabels.append(int(traincpulabels[i]/10))
+        convertedlabels.append(int(traincpulabels[i]/5))
 
 
 #woo_label_raw = np.array(traincpulabels, np.int32)
@@ -201,10 +211,12 @@ trainList_label = np_utils.to_categorical(trainList_label_raw, nb_classes)
 #new_woo = woo.reshape((10,4,1))
 #new_woo = woo.reshape((len(traincpu),50,1))
 trainList_reshape = trainList.reshape((len(traincpu)),30,1)
+#for i in xrange(10):
+#    print(trainList_reshape[i])
 #reshape((number_of_data,30,1))
 
 #new_woo_label = woo_label.reshape(10,2)
-trainList_label_reshape = trainList_label.reshape((len(traincpu),10))
+trainList_label_reshape = trainList_label.reshape((len(traincpu),20))
 #reshape((number_of_data,number_of_classes))
 #number_of_classes = 1001 currently
 
@@ -224,10 +236,10 @@ for i in range(len(testcpulabels)-4):
 
 convertedlabels = []
 for i in xrange(len(testcpulabels)):
-    if traincpulabels[i]/10==10:
-        convertedlabels.append(9)
+    if traincpulabels[i]/5==20:
+        convertedlabels.append(19)
     else:
-        convertedlabels.append(int(traincpulabels[i]/10))
+        convertedlabels.append(int(traincpulabels[i]/5))
 
 #woo_test = np.array(testcpu, np.int32)
 #woo_label_raw_test = np.array(templabels, np.int32)
@@ -239,13 +251,13 @@ testList_label_raw = np. array(convertedlabels, np.int32)
 testList_label = np_utils.to_categorical(testList_label_raw, nb_classes)
 
 testList_reshape = testList.reshape((len(testcpu)),30,1)
-testList_label_reshape = testList_label.reshape(len(testcpu),10)
+testList_label_reshape = testList_label.reshape(len(testcpu),20)
 
 #new_woo_test = woo_test.reshape((len(testcpu),50,1))
 #new_woo_label_test = woo_label_test.reshape(len(testcpu),10)
 
 
-print('Evaluate IRNN...')
+"""print('Evaluate IRNN...')
 model = Sequential()
 model.add(SimpleRNN(output_dim=hidden_units,
                     init=lambda shape: normal(shape, scale=0.001),
@@ -256,8 +268,6 @@ model.add(Activation('softmax'))
 rmsprop = RMSprop(lr=learning_rate)
 model.compile(loss='categorical_crossentropy', optimizer=rmsprop)
 
-"""model.fit(new_woo, new_woo_label, batch_size=batch_size, nb_epoch=nb_epochs,
-          show_accuracy=True, verbose=1)"""
 model.fit(trainList_reshape, trainList_label_reshape, batch_size=batch_size, nb_epoch=nb_epochs,
           show_accuracy=True, verbose=1)
 
@@ -265,25 +275,28 @@ model.fit(trainList_reshape, trainList_label_reshape, batch_size=batch_size, nb_
 
 predictions = model.predict_classes(testList_reshape, batch_size=batch_size, verbose = 1)
 
-with open('predictionResult.csv', 'wb') as f:
+with open('predictionResult_20classes.csv', 'wb') as f:
     writer = csv.writer(f)
-    writer.writerows([predictions,testcpulabels])
+    writer.writerows([predictions,testcpulabels])"""
 
 
-"""print('IRNN test score:', scores[0])
-print('IRNN test accuracy:', scores[1])
-
-print('Compare to LSTM...')
+print('Evaluate LSTM...')
 model = Sequential()
-model.add(LSTM(hidden_units, input_shape=new_woo.shape[1:]))
+
+#model.add(LSTM(hidden_units, input_shape=new_woo.shape[1:]))
+model.add(LSTM(hidden_units,input_shape=trainList_reshape.shape[1:]))
+
 model.add(Dense(nb_classes))
+model.add(Dropout(0.5))
 model.add(Activation('softmax'))
 rmsprop = RMSprop(lr=learning_rate)
-model.compile(loss='categorical_crossentropy', optimizer=rmsprop)
+#model.compile(loss='categorical_crossentropy', optimizer=rmsprop)
+model.compile(loss='categorical_crossentropy', optimizer='adam', class_mode='categorical')
 
-model.fit(new_woo, new_woo_label, batch_size=batch_size, nb_epoch=nb_epochs,
-          show_accuracy=True, verbose=1, validation_data=(new_woo_test, new_woo_label_test))
+model.fit(trainList_reshape, trainList_label_reshape,batch_size=batch_size, nb_epoch=nb_epochs,
+          show_accuracy=True, verbose=1)
+predictions = model.predict_classes(testList_reshape, batch_size=batch_size, verbose = 1)
 
-scores = model.evaluate(new_woo_test, new_woo_label_test, show_accuracy=True, verbose=0)
-print('LSTM test score:', scores[0])
-print('LSTM test accuracy:', scores[1])"""
+with open('predictionResult_LSTM_20classes_compilechanged.csv', 'wb') as f:
+    writer = csv.writer(f)
+    writer.writerows([predictions,testcpulabels])

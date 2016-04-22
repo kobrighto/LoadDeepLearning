@@ -91,8 +91,7 @@ def percentOfRightPredictions(predictList, testList, errorLevel):
     for i in xrange(len(predictList)):
         for j in xrange(len(predictList[i])):
             totalCount+=1
-            error = (predictList[i][j]-testList[i+j])
-            if abs(error)*100<(errorLevel+testList[i+j]):
+            if abs(float(predictList[i][j])-float(testList[i+j]))<=errorLevel:
                 rightPredictions+=1
     percent = float(rightPredictions)/float(totalCount)
     return (percent*100)

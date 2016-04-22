@@ -2,5 +2,12 @@ __author__ = 'Minh'
 
 import platform
 
-# For all kind of (dumb) testings
-print (platform.platform() == "Windows-7-6.1.7601-SP1")
+print 'uname:', platform.uname()
+
+print
+print 'system   :', platform.system()
+print 'node     :', platform.node()
+print 'release  :', platform.release()
+print 'version  :', platform.version()
+print 'machine  :', platform.machine()
+print 'processor:', platform.processor()

@@ -13,6 +13,10 @@ if (platform.node()=="minh/titan"):
     dirPath = '/home/minh/Desktop/Google_Data/processed'
     chdir(dirPath)
     filename = 'usage_1_minute_total_converted_no_duplicates.csv'
+elif (platform.node() == "woosungpil-PC"):
+    dirPath = 'C:\Users\woosungpil\Desktop\Rawdata'
+    chdir(dirPath)
+    filename = 'usage_1_minute_total_converted_no_duplicates.csv'
 
 """def makeLists(lineNumber, interval):
     dirPath = '/home/minh/Desktop/Google_Data/processed'
@@ -108,12 +112,12 @@ def makeTrainTestLists(cpuList,memList,markPoint,length,times):
         testcpulabels[i]=int(testcpulabels[i]*times)
         testmemlabels[i]=int(testmemlabels[i]*times)"""
 
-cpuList,memList = DataPostProcessing.meanLoad(10,1)
+cpuList,memList = DataPostProcessing.meanLoad(121,1)
 #cpuList, memList = makeLists(10,2)
 print('cpuList length:', len(cpuList))
 
 traincpu,trainmem,testcpu,testmem,traincpulabels,trainmemlabels,testcpulabels,testmemlabels \
-    = DataPostProcessing.makeTrainTestLists(cpuList,memList,30,int(0.75*len(cpuList)),30,1)
+    = DataPostProcessing.makeTrainTestLists(cpuList,memList,30,int(0.9*len(cpuList)),30,1)
 
 """for i in xrange(len(traincpu)):
     for j in xrange(len(traincpu[i])):
@@ -257,16 +261,17 @@ testList_label_reshape = testList_label.reshape(len(testcpu),20)
 #new_woo_label_test = woo_label_test.reshape(len(testcpu),10)
 
 
-"""print('Evaluate IRNN...')
+print('Evaluate IRNN...')
 model = Sequential()
 model.add(SimpleRNN(output_dim=hidden_units,
                     init=lambda shape: normal(shape, scale=0.001),
                     inner_init=lambda shape: identity(shape, scale=1.0),
                     activation='relu', input_shape=trainList_reshape.shape[1:]))
 model.add(Dense(nb_classes))
+model.add(Dropout(0.5))
 model.add(Activation('softmax'))
 rmsprop = RMSprop(lr=learning_rate)
-model.compile(loss='categorical_crossentropy', optimizer=rmsprop)
+model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 model.fit(trainList_reshape, trainList_label_reshape, batch_size=batch_size, nb_epoch=nb_epochs,
           show_accuracy=True, verbose=1)
@@ -275,12 +280,13 @@ model.fit(trainList_reshape, trainList_label_reshape, batch_size=batch_size, nb_
 
 predictions = model.predict_classes(testList_reshape, batch_size=batch_size, verbose = 1)
 
-with open('predictionResult_20classes.csv', 'wb') as f:
+with open('iRNN_30_30_20_121.csv', 'wb') as f:
     writer = csv.writer(f)
-    writer.writerows([predictions,testcpulabels])"""
+    writer.writerows('model=IRNN,length_input=30,label_mean_length=30, numofclass =20,optimizer=adam, loss=categorical_crossentropy, dropout(0.5), numofepoch=100')
+    writer.writerows([predictions,testcpulabels])
 
 
-print('Evaluate LSTM...')
+"""print('Evaluate LSTM...')
 model = Sequential()
 
 #model.add(LSTM(hidden_units, input_shape=new_woo.shape[1:]))
@@ -299,4 +305,4 @@ predictions = model.predict_classes(testList_reshape, batch_size=batch_size, ver
 
 with open('predictionResult_LSTM_20classes_compilechanged.csv', 'wb') as f:
     writer = csv.writer(f)
-    writer.writerows([predictions,testcpulabels])
+    writer.writerows([predictions,testcpulabels])"""

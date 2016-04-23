@@ -5,7 +5,9 @@ from os import listdir, chdir, path
 import csv
 import sys
 
-if (platform.node()=="minh-titan"):
+if (platform.platform()=='Windows-7-6.1.7601-SP1'):
+    dirPath = 'C:\Users\woosungpil\Desktop\Rawdata'
+elif (platform.platform()=="Linux-3.19.0-25-generic-x86_64-with-Ubuntu-14.04-trusty"):
     dirPath = '/home/minh/Desktop/Google_Data/processed'
 
 def meanLoad(lineNo, noOfMinutes):
@@ -16,6 +18,7 @@ def meanLoad(lineNo, noOfMinutes):
     memList = []
     with open('usage_1_minute_total_converted_no_duplicates.csv', 'r') as f:
         reader = csv.reader(f)
+    
         for line in reader:
             if lineCount>lineNo:
                 break
@@ -29,6 +32,7 @@ def meanLoad(lineNo, noOfMinutes):
                 break
             else:
                 lineCount+=1
+            
     #print('Done 1')
     for i in xrange(len(cpuList)):
         if float(cpuList[i])>100:

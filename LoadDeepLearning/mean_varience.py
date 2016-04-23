@@ -15,6 +15,19 @@ import platform
 import DataPostProcessing as sp
 import numpy as np
 
+if (platform.platform()=='Windows-7-6.1.7601-SP1'):
+    dirPath = 'C:\Users\woosungpil\Desktop\Rawdata'
+    chdir(dirPath)
+
+lineCount = 0 
+with open('usage_1_minute_total_converted_no_duplicates.csv', 'r') as f:
+    reader = csv.reader(f)
+    for line in reader:
+        if (lineCount%1000==0):
+            print('Current lineCount: ', lineCount)
+        lineCount+=1
+print(lineCount)
+
 f = open("C:\Users\woosungpil\Desktop\minh.txt", 'w')
 f.write("-----mean-----\n")
 for i in xrange(2000):

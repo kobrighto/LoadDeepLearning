@@ -18,7 +18,6 @@ def meanLoad(lineNo, noOfMinutes):
     memList = []
     with open('usage_1_minute_total_converted_no_duplicates.csv', 'r') as f:
         reader = csv.reader(f)
-    
         for line in reader:
             if lineCount>lineNo:
                 break

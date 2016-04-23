@@ -9,7 +9,7 @@ from datetime import datetime
 import platform
 import DataPostProcessing
 
-if (platform.node()=="minh/titan"):
+if (platform.node()=="minh-titan"):
     dirPath = '/home/minh/Desktop/Google_Data/processed'
     chdir(dirPath)
     filename = 'usage_1_minute_total_converted_no_duplicates.csv'

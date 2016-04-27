@@ -112,12 +112,12 @@ def makeTrainTestLists(cpuList,memList,markPoint,length,times):
         testcpulabels[i]=int(testcpulabels[i]*times)
         testmemlabels[i]=int(testmemlabels[i]*times)"""
 
-cpuList,memList = DataPostProcessing.meanLoad(121,1)
+cpuList,memList = DataPostProcessing.meanLoad(8107,1)
 #cpuList, memList = makeLists(10,2)
 print('cpuList length:', len(cpuList))
 
 traincpu,trainmem,testcpu,testmem,traincpulabels,trainmemlabels,testcpulabels,testmemlabels \
-    = DataPostProcessing.makeTrainTestLists(cpuList,memList,30,int(0.9*len(cpuList)),30,1)
+    = DataPostProcessing.makeTrainTestLists(cpuList,memList,15,int(0.9*len(cpuList)),30,1)
 
 """for i in xrange(len(traincpu)):
     for j in xrange(len(traincpu[i])):
@@ -148,9 +148,9 @@ from keras.layers.core import Dropout
 
 
 batch_size = 5
-nb_classes = 20
+nb_classes = 25
 nb_epochs = 100
-hidden_units = 100
+hidden_units = 50
 
 learning_rate = 1e-6
 clip_norm = 1.0
@@ -192,10 +192,10 @@ for i in range(len(traincpulabels)-4):
 
 convertedlabels = []
 for i in xrange(len(traincpulabels)):
-    if traincpulabels[i]/5==20:
-        convertedlabels.append(19)
+    if traincpulabels[i]/(100/nb_classes)>=nb_classes:
+        convertedlabels.append(nb_classes-1)
     else:
-        convertedlabels.append(int(traincpulabels[i]/5))
+        convertedlabels.append(int(traincpulabels[i]/(100/nb_classes)))
 
 
 #woo_label_raw = np.array(traincpulabels, np.int32)
@@ -220,7 +220,7 @@ trainList_reshape = trainList.reshape((len(traincpu)),30,1)
 #reshape((number_of_data,30,1))
 
 #new_woo_label = woo_label.reshape(10,2)
-trainList_label_reshape = trainList_label.reshape((len(traincpu),20))
+trainList_label_reshape = trainList_label.reshape((len(traincpu),nb_classes))
 #reshape((number_of_data,number_of_classes))
 #number_of_classes = 1001 currently
 
@@ -240,10 +240,10 @@ for i in range(len(testcpulabels)-4):
 
 convertedlabels = []
 for i in xrange(len(testcpulabels)):
-    if traincpulabels[i]/5==20:
-        convertedlabels.append(19)
+    if traincpulabels[i]/(100/nb_classes)>=nb_classes:
+        convertedlabels.append(nb_classes-1)
     else:
-        convertedlabels.append(int(traincpulabels[i]/5))
+        convertedlabels.append(int(traincpulabels[i]/(100/nb_classes)))
 
 #woo_test = np.array(testcpu, np.int32)
 #woo_label_raw_test = np.array(templabels, np.int32)
@@ -255,20 +255,20 @@ testList_label_raw = np. array(convertedlabels, np.int32)
 testList_label = np_utils.to_categorical(testList_label_raw, nb_classes)
 
 testList_reshape = testList.reshape((len(testcpu)),30,1)
-testList_label_reshape = testList_label.reshape(len(testcpu),20)
+testList_label_reshape = testList_label.reshape(len(testcpu),nb_classes)
 
 #new_woo_test = woo_test.reshape((len(testcpu),50,1))
 #new_woo_label_test = woo_label_test.reshape(len(testcpu),10)
 
 
-print('Evaluate IRNN...')
+"""print('Evaluate IRNN...')
 model = Sequential()
 model.add(SimpleRNN(output_dim=hidden_units,
                     init=lambda shape: normal(shape, scale=0.001),
                     inner_init=lambda shape: identity(shape, scale=1.0),
                     activation='relu', input_shape=trainList_reshape.shape[1:]))
 model.add(Dense(nb_classes))
-model.add(Dropout(0.5))
+#model.add(Dropout(0.5))
 model.add(Activation('softmax'))
 rmsprop = RMSprop(lr=learning_rate)
 model.compile(loss='categorical_crossentropy', optimizer='adam')
@@ -280,13 +280,13 @@ model.fit(trainList_reshape, trainList_label_reshape, batch_size=batch_size, nb_
 
 predictions = model.predict_classes(testList_reshape, batch_size=batch_size, verbose = 1)
 
-with open('iRNN_30_30_20_121.csv', 'wb') as f:
+with open('iRNN_20_1_25_15mean_8107.csv', 'wb') as f:
     writer = csv.writer(f)
-    writer.writerows('model=IRNN,length_input=30,label_mean_length=30, numofclass =20,optimizer=adam, loss=categorical_crossentropy, dropout(0.5), numofepoch=100')
-    writer.writerows([predictions,testcpulabels])
+    #writer.writerows('model=IRNN,length_input=30,label_mean_length=30, numofclass =20,optimizer=adam, loss=categorical_crossentropy, dropout(0.5), numofepoch=100')
+    writer.writerows([predictions,testcpulabels])"""
 
 
-"""print('Evaluate LSTM...')
+print('Evaluate LSTM...')
 model = Sequential()
 
 #model.add(LSTM(hidden_units, input_shape=new_woo.shape[1:]))
@@ -297,12 +297,14 @@ model.add(Dropout(0.5))
 model.add(Activation('softmax'))
 rmsprop = RMSprop(lr=learning_rate)
 #model.compile(loss='categorical_crossentropy', optimizer=rmsprop)
-model.compile(loss='categorical_crossentropy', optimizer='adam', class_mode='categorical')
+model.compile(loss='categorical_crossentropy', optimizer='adamax')
+#model.compile(loss='mean_squared_error', optimizer='rmsprop')
 
 model.fit(trainList_reshape, trainList_label_reshape,batch_size=batch_size, nb_epoch=nb_epochs,
           show_accuracy=True, verbose=1)
 predictions = model.predict_classes(testList_reshape, batch_size=batch_size, verbose = 1)
 
-with open('predictionResult_LSTM_20classes_compilechanged.csv', 'wb') as f:
+with open('LSTM_30_15_25_8107_1mean_50hidden_100epochs.csv', 'wb') as f:
     writer = csv.writer(f)
-    writer.writerows([predictions,testcpulabels])"""
+    #writer.writerows([('model=LSTM'),('length_input=30'),('label_mean_length=30'),('numofclass=20'),('optimizer=adam'),('loss=categorical_crossentropy'),('dropout(0.5)),(numofepoch=100')])
+    writer.writerows([predictions,testcpulabels])

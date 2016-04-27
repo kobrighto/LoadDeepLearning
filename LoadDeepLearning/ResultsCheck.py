@@ -11,7 +11,7 @@ if (platform.platform()=="Linux-3.19.0-25-generic-x86_64-with-Ubuntu-14.04-trust
     dirPath = '/home/minh/Desktop/Google_Data/processed'
 
 chdir(dirPath)
-filename = 'predictionResult_LSTM_20classes_compilechanged.csv'
+filename = 'iRNN_20_1_25_15mean_8107.csv'
 lineCount = 1
 prediction = []
 test = []
@@ -27,18 +27,22 @@ with open(filename,'rb') as f:
 
 numCount = 0
 difference = 0
+nb_classes = 20
+
 for i in xrange(len(prediction)):
-    curPrediction = (float(prediction[i])*5)+2.5
+    curPrediction = (float(prediction[i])*(100/nb_classes))+(50/nb_classes)
     curTest = float(test[i])
     difference+=(curPrediction-curTest)*(curPrediction-curTest)
     numCount+=1
 accuracy = math.sqrt(difference/numCount)
 
-print('Accuracy (RMSE): ', accuracy)
+print('Accuracy (RMSE) of LSTM: ', accuracy)
 
 for i in xrange(len(prediction)):
-    prediction[i]=[(float(prediction[i])*5)+2.5]
+    prediction[i]=[(float(prediction[i])*(100/nb_classes))+(50/nb_classes)]
 
 print('level 5: ',Algorithms.percentOfRightPredictions(prediction, test, 5))
 print('level 10: ',Algorithms.percentOfRightPredictions(prediction, test, 10))
 print('level 15: ',Algorithms.percentOfRightPredictions(prediction, test, 15))
+
+#Algorithms.plot2Lines(prediction, 'prediction', test, 'test')

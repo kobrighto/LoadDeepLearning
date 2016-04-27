@@ -8,6 +8,7 @@ import sys
 import math
 from pandas import ewma
 import DataPostProcessing
+import platform
 
 def regressiveStep(inputList, paramsList):
     #paramsList_reverse = paramsList[::-1]
@@ -96,14 +97,12 @@ def percentOfRightPredictions(predictList, testList, errorLevel):
     percent = float(rightPredictions)/float(totalCount)
     return (percent*100)
 
-cpuList, memList = DataPostProcessing.meanLoad(1,30)
+cpuList, memList = DataPostProcessing.meanLoad(8107,15)
 
 print(len(cpuList))
 print(len(memList))
 
-predictList,testList = autoRegression(cpuList,int(0.75*(len(cpuList))),7,1)
-
-#plot2Lines(predictList, 'prediction', testList, 'test')
+predictList,testList = autoRegression(cpuList,int(0.9*(len(cpuList))),-1,1)
 
 print('averageMSE of AR:', averageMSE(predictList, testList, True))
 
@@ -111,10 +110,12 @@ print('level 5: ',percentOfRightPredictions(predictList, testList, 5))
 print('level 10: ',percentOfRightPredictions(predictList, testList, 10))
 print('level 15: ',percentOfRightPredictions(predictList, testList, 15))
 
-predictList, testList = ema(cpuList,int(0.75*(len(cpuList))),0.95,20,1)
+predictList, testList = ema(cpuList,int(0.9*(len(cpuList))),0.95,20,1)
 
 print('averageMSE of EMA:', averageMSE(predictList, testList, True))
 
 print('level 5: ',percentOfRightPredictions(predictList, testList, 5))
 print('level 10: ',percentOfRightPredictions(predictList, testList, 10))
 print('level 15: ',percentOfRightPredictions(predictList, testList, 15))
+
+#plot2Lines(predictList, 'prediction', testList, 'test')

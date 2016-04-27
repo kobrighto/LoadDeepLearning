@@ -34,9 +34,6 @@ def train_test_split(df, test_size=0.1):
     X_train, y_train = _load_data(df.loc[0:ntrn])
     X_test, y_test = _load_data(df.loc[ntrn:])
 
-    #print('Xtrain', X_train)
-    print('Ytrain', y_train)
-
     return (X_train, y_train), (X_test, y_test)
 
 from keras.models import Sequential
@@ -54,7 +51,18 @@ model.add(Activation("linear"))
 model.compile(loss="mean_squared_error", optimizer="rmsprop")
 
 (X_train, y_train), (X_test, y_test) = train_test_split(data)  # retrieve data
-model.fit(X_train, y_train, batch_size=450, nb_epoch=1, validation_split=0.05)
+print('length1: ', len(X_train))
+print('length2: ', len(X_train[0]))
+print('length3: ', len(X_train[0][0]))
+
+print('length1 X_test: ', len(X_test))
+print('length2 X_test: ', len(X_test[0]))
+#print('length3 X_test: ', len(X_train[0][0]))
+print('X_train: ', X_train)
+print('Y_train: ', y_train)
+print('X_test: ', X_test)
+print('y_test: ', y_test)
+model.fit(X_train, y_train, batch_size=450, nb_epoch=10, validation_split=0.05)
 
 predicted = model.predict(X_test)
 rmse = np.sqrt(((predicted - y_test) ** 2).mean(axis=0))

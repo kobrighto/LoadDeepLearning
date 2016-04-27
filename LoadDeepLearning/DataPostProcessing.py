@@ -4,6 +4,7 @@ import platform
 from os import listdir, chdir, path
 import csv
 import sys
+import numpy as np
 
 if (platform.platform()=='Windows-7-6.1.7601-SP1'):
     dirPath = 'C:\Users\woosungpil\Desktop\Rawdata'
@@ -86,6 +87,44 @@ def meanLoad(lineNo, noOfMinutes):
         i+=noOfMinutes
     return (meanCPUList, meanMemList)
 
+#inputvector example: (15x3), labelvector example: (15x6), pairCount example: 6946
+#markPoint: number of trainingPairs
+def makeTrainTestList_seq(cpuList,markPoint,inputvector,labelvector):
+    traincpuList = []
+    traincpuLabels = []
+    for i in xrange(0,len(cpuList)-inputvector[0]*inputvector[1]+1,inputvector[1]):
+        subcpuList = []
+        for j in xrange(inputvector[0]):
+            subList = []
+            for k in xrange(inputvector[1]):
+                subList.append(cpuList[i+j*inputvector[1]+k])
+            subcpuList.append(subList)
+        traincpuList.append(subcpuList)
+    for i in xrange(inputvector[1]*inputvector[0],len(cpuList)-labelvector[0]*labelvector[1]+1,inputvector[1]):
+        subcpulabels = []
+        for j in xrange(labelvector[1]):
+            curTotal = 0.0
+            for k in xrange(labelvector[0]):
+                curTotal+=cpuList[i+j*labelvector[0]+k]
+            curMean = curTotal/float(labelvector[0])
+            subcpulabels.append(curMean)
+        traincpuLabels.append(subcpulabels)
+
+    pairCount = -1
+    if len(traincpuList)>len(traincpuLabels):
+        pairCount=len(traincpuLabels)
+    else:
+        pairCount=len(traincpuList)
+    print('Total number of vector pairs: ', pairCount)
+    traincpuList = traincpuList[:pairCount]
+    traincpuLabels = traincpuLabels[:pairCount]
+    markPoint = int(markPoint)
+    finaltraincpulist = np.array(traincpuList[:markPoint])
+    finaltraincpulabels = np.array(traincpuLabels[:markPoint])
+    finaltestcpulist = np.array(traincpuList[markPoint:])
+    finaltestcpulabels = np.array(traincpuLabels[:markPoint])
+    return (finaltraincpulist,finaltraincpulabels,finaltestcpulist,finaltestcpulabels)
+
 #meanLabel: labels are made from mean of ? number of load values
 def makeTrainTestLists(cpuList,memList,meanLabel,markPoint,length,times):
     traincpuList = cpuList[:markPoint]
@@ -141,3 +180,7 @@ def makeTrainTestLists(cpuList,memList,meanLabel,markPoint,length,times):
             testmemList[i]=int(float(testmemList[i])*times)
     return (finaltraincpuList,finaltrainmemList,finaltestcpuList,finaltestmemList,
             finaltraincpulabels,finaltrainmemlabels,finaltestcpulabels,finaltestmemlabels)
+
+"""cpuList,memList = meanLoad(8107,2)
+print('cpuList length: ', len(cpuList))
+traincpulist,traincpulabels,testcpulist,testcpulabels = makeTrainTestList_seq(cpuList,0.9*6946,(15,3),(15,6))"""

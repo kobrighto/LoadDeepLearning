@@ -102,7 +102,11 @@ cpuList, memList = DataPostProcessing.meanLoad(8107,30)
 print(len(cpuList))
 print(len(memList))
 
+<<<<<<< HEAD
 predictList,testList = autoRegression(cpuList,int(0.6*(len(cpuList))),-1,6)
+=======
+predictList,testList = autoRegression(cpuList,int(0.9*(len(cpuList))),-1,6)
+>>>>>>> 008c353030c947ef006656aeeac12ba9ec8dcd96
 
 print('averageMSE of AR:', averageMSE(predictList, testList, True))
 
@@ -112,9 +116,13 @@ print('level 5: ',percentOfRightPredictions(predictList, testList, 5))
 print('level 10: ',percentOfRightPredictions(predictList, testList, 10))
 print('level 15: ',percentOfRightPredictions(predictList, testList, 15))
 
+<<<<<<< HEAD
 predictList, testList = ema(cpuList,int(0.6*(len(cpuList))),0.95,20,6)
 
 #print('predictList length:', len(predictList))
+=======
+predictList, testList = ema(cpuList,int(0.9*(len(cpuList))),0.95,20,6)
+>>>>>>> 008c353030c947ef006656aeeac12ba9ec8dcd96
 
 print('averageMSE of EMA:', averageMSE(predictList, testList, True))
 

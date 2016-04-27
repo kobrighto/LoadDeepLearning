@@ -5,10 +5,12 @@ from os import listdir, chdir, path
 import csv
 import sys
 
-if (platform.platform()=='Windows-7-6.1.7601-SP1'):
+if (platform.node() == "woosungpil-PC"):
     dirPath = 'C:\Users\woosungpil\Desktop\Rawdata'
-elif (platform.platform()=="Linux-3.19.0-25-generic-x86_64-with-Ubuntu-14.04-trusty"):
+elif (platform.node()=="minh-titan"):
     dirPath = '/home/minh/Desktop/Google_Data/processed'
+elif (platform.node()=="Minh_Desktop1"):
+    dirPath = 'E:\Google_Data\processed'
 
 def sampling(lineNo, noOfMinutes):
     csv.field_size_limit(sys.maxint)

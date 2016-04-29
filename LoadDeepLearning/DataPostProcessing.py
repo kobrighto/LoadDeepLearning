@@ -124,7 +124,7 @@ def makeTrainTestList_seq(cpuList,markPoint,inputvector,labelvector):
     finaltraincpulist = np.array(traincpuList[:markPoint])
     finaltraincpulabels = np.array(traincpuLabels[:markPoint])
     finaltestcpulist = np.array(traincpuList[markPoint:])
-    finaltestcpulabels = np.array(traincpuLabels[:markPoint])
+    finaltestcpulabels = np.array(traincpuLabels[markPoint:])
     return (finaltraincpulist,finaltraincpulabels,finaltestcpulist,finaltestcpulabels)
 
 #meanLabel: labels are made from mean of ? number of load values

@@ -13,8 +13,8 @@ if (platform.node()=="minh-titan"):
     chdir(dirPath)
 
 chdir(dirPath)
-predictFileName = 'predicted.csv'
-testFileName = 'test_data.csv'
+predictFileName = 'predicted_8107_20epochs.csv'
+testFileName = 'test_data_8107_20epochs.csv'
 predictLength = 6
 prediction = []
 test = []
@@ -47,7 +47,12 @@ rmse = np.sqrt(mse/len(processedTest))"""
 
 averageMSE = Algorithms.averageMSE(processedPrediction,processedTest,True)
 
-print('length processedTest: ', len(processedTest))
 print('seq2seqLSTM RMSE: ', averageMSE)
+
+print('level 5: ',Algorithms.percentOfRightPredictions(processedPrediction, processedTest, 5))
+print('level 10: ',Algorithms.percentOfRightPredictions(processedPrediction, processedTest, 10))
+print('level 15: ',Algorithms.percentOfRightPredictions(processedPrediction, processedTest, 15))
+
+"""print('length processedTest: ', len(processedTest))
 print('processedTest: ', processedTest)
-print('processedPrediction: ', processedPrediction)
+print('processedPrediction: ', processedPrediction)"""

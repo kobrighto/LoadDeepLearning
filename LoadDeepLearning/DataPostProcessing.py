@@ -87,11 +87,40 @@ def meanLoad(lineNo, noOfMinutes):
         meanCPUList.append(sumCPU/noOfMinutes)
         meanMemList.append(sumCPU/noOfMinutes)
         i+=noOfMinutes
+    for i in xrange(len(meanCPUList)):
+        meanCPUList[i]=int(meanCPUList[i])
+        meanMemList[i]=int(meanMemList[i])
     return (meanCPUList, meanMemList)
+
+def makeTrainorTestList(trainList,trainingStep,inputvector,labelvector):
+    traincpuList = []
+    for i in xrange(0,len(trainList)-inputvector[0]*inputvector[1]-labelvector[0]*labelvector[1]+1
+                    ,trainingStep):
+        subcpuList = []
+        for j in xrange(inputvector[0]):
+            subList = []
+            for k in xrange(inputvector[1]):
+                subList.append(trainList[i+j*inputvector[1]+k])
+            subcpuList.append(subList)
+        traincpuList.append(subcpuList)
+    traincpuLabels = []
+    for i in xrange(inputvector[0]*inputvector[1],len(trainList)-labelvector[0]*labelvector[1]+1
+                    ,trainingStep):
+        subcpulabels = []
+        for j in xrange(labelvector[1]):
+            curTotal = 0.0
+            for k in xrange(labelvector[0]):
+                curTotal += trainList[i+j*labelvector[0]+k]
+            curMean = curTotal/float(labelvector[0])
+            subcpulabels.append(curMean)
+        traincpuLabels.append(subcpulabels)
+    return(np.array(traincpuList),np.array(traincpuLabels))
+
+
 
 #inputvector example: (15x3), labelvector example: (15x6), pairCount example: 6946
 #markPoint: number of trainingPairs
-def makeTrainTestList_seq(cpuList,markPoint,inputvector,labelvector):
+def makeTrainTestList_backup(cpuList,markPoint,inputvector,labelvector):
     traincpuList = []
     traincpuLabels = []
     for i in xrange(0,len(cpuList)-inputvector[0]*inputvector[1]+1,inputvector[1]):
@@ -128,7 +157,7 @@ def makeTrainTestList_seq(cpuList,markPoint,inputvector,labelvector):
     return (finaltraincpulist,finaltraincpulabels,finaltestcpulist,finaltestcpulabels)
 
 #meanLabel: labels are made from mean of ? number of load values
-def makeTrainTestLists(cpuList,memList,meanLabel,markPoint,length,times):
+def makeTrainTestLists_backup2(cpuList,memList,meanLabel,markPoint,length,times):
     traincpuList = cpuList[:markPoint]
     trainmemList = memList[:markPoint]
     testcpuList = cpuList[markPoint-length+1:]
@@ -183,6 +212,7 @@ def makeTrainTestLists(cpuList,memList,meanLabel,markPoint,length,times):
     return (finaltraincpuList,finaltrainmemList,finaltestcpuList,finaltestmemList,
             finaltraincpulabels,finaltrainmemlabels,finaltestcpulabels,finaltestmemlabels)
 
-"""cpuList,memList = meanLoad(8107,2)
-print('cpuList length: ', len(cpuList))
-traincpulist,traincpulabels,testcpulist,testcpulabels = makeTrainTestList_seq(cpuList,0.9*6946,(15,3),(15,6))"""
+"""trainList = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+traincpu, trainlabels = makeTrainorTestList(trainList,trainingStep=1,inputvector=[2,2],labelvector=[1,2])
+print('traincpu: ', traincpu)
+print('trainlabels: ', trainlabels)"""

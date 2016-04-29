@@ -52,7 +52,7 @@ def autoRegression(inputList, markPoint, lag, numOfSteps):
         ar_res = ar_mod.fit(lag)
     predictionList = []
     ar_res = ar_res.params
-    #print(ar_res)
+    #print('ar_res: ',ar_res)
     for i in xrange(len(testList)-numOfSteps+1):
         curPrediction = []
         tempList = inputList[:(markPoint+i)]
@@ -97,14 +97,14 @@ def percentOfRightPredictions(predictList, testList, errorLevel):
     percent = float(rightPredictions)/float(totalCount)
     return (percent*100)
 
-cpuList, memList = DataPostProcessing.meanLoad(12236,30)
+cpuList, memList = DataPostProcessing.meanLoad(3165,30)
 
 print(len(cpuList))
 print(len(memList))
 
-predictList,testList = autoRegression(cpuList,int(0.8*(len(cpuList))),-1,5)
+predictList,testList = autoRegression(cpuList,int(0.8*(len(cpuList))),7,6)
 
-print('averageMSE of AR:', averageMSE(predictList, testList, True))
+print('averageMSE of AR:', averageMSE(predictList, testList, False))
 
 #print('predictList length:', len(predictList))
 
@@ -114,9 +114,9 @@ print('level 15: ',percentOfRightPredictions(predictList, testList, 15))
 
 #print('predictList length:', len(predictList))
 
-predictList, testList = ema(cpuList,int(0.8*(len(cpuList))),0.95,20,5)
+predictList, testList = ema(cpuList,int(0.8*(len(cpuList))),0.95,20,6)
 
-print('averageMSE of EMA:', averageMSE(predictList, testList, True))
+print('averageMSE of EMA:', averageMSE(predictList, testList, False))
 
 print('level 5: ',percentOfRightPredictions(predictList, testList, 5))
 print('level 10: ',percentOfRightPredictions(predictList, testList, 10))

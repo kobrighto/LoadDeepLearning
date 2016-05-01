@@ -92,6 +92,34 @@ def meanLoad(lineNo, noOfMinutes):
         meanMemList[i]=int(meanMemList[i])
     return (meanCPUList, meanMemList)
 
+def appendZero(number,length):
+    number = str(number)
+    for i in xrange(length-len(number)):
+        number = '0'+number
+    return number
+
+def makeListSequence(trainList,trainingStep,inputvector,labelvector):
+    traincpuList = []
+    for i in xrange(0,len(trainList)-inputvector[0]*inputvector[1]-labelvector[0]*labelvector[1]+1
+                    ,trainingStep):
+        for j in xrange(inputvector[0]):
+            curString = ''
+            for k in xrange(inputvector[1]):
+                curString+=appendZero(int(round(trainList[i+j*inputvector[1]+k])),3)
+            traincpuList.append(curString)
+    traincpuLabels = []
+    for i in xrange(inputvector[0]*inputvector[1],len(trainList)-labelvector[0]*labelvector[1]+1
+                    ,trainingStep):
+        curString = ''
+        for j in xrange(labelvector[1]):
+            curTotal = 0.0
+            for k in xrange(labelvector[0]):
+                curTotal += trainList[i+j*labelvector[0]+k]
+            curMean = int(round(curTotal/float(labelvector[0])))
+            curString+=appendZero(curMean,3)
+        traincpuLabels.append(curString)
+    return(traincpuList,traincpuLabels)
+
 def makeTrainorTestList(trainList,trainingStep,inputvector,labelvector):
     traincpuList = []
     for i in xrange(0,len(trainList)-inputvector[0]*inputvector[1]-labelvector[0]*labelvector[1]+1
@@ -114,6 +142,19 @@ def makeTrainorTestList(trainList,trainingStep,inputvector,labelvector):
             curMean = curTotal/float(labelvector[0])
             subcpulabels.append(curMean)
         traincpuLabels.append(subcpulabels)
+    for i in xrange(len(traincpuList)):
+        for j in xrange(len(traincpuList[i])):
+            for k in xrange(len(traincpuList[i][j])):
+                if traincpuList[i][j][k]<100:
+                    traincpuList[i][j][k] = '0'+str(int(traincpuList[i][j][k]))
+                else:
+                    traincpuList[i][j][k] = str(int(traincpuList[i][j][k]))
+    for i in xrange(len(traincpuLabels)):
+        for j in xrange(len(traincpuLabels[i])):
+            if traincpuLabels[i][j]<100:
+                traincpuLabels[i][j] = '0'+str(int(traincpuLabels[i][j]))
+            else:
+                traincpuLabels[i][j] = str(int(traincpuLabels[i][j]))
     return(np.array(traincpuList),np.array(traincpuLabels))
 
 
@@ -212,7 +253,7 @@ def makeTrainTestLists_backup2(cpuList,memList,meanLabel,markPoint,length,times)
     return (finaltraincpuList,finaltrainmemList,finaltestcpuList,finaltestmemList,
             finaltraincpulabels,finaltrainmemlabels,finaltestcpulabels,finaltestmemlabels)
 
-"""trainList = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
-traincpu, trainlabels = makeTrainorTestList(trainList,trainingStep=1,inputvector=[2,2],labelvector=[1,2])
+trainList = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+traincpu, trainlabels = makeListSequence(trainList,trainingStep=1,inputvector=[1,2],labelvector=[3,2])
 print('traincpu: ', traincpu)
-print('trainlabels: ', trainlabels)"""
+print('trainlabels: ', trainlabels)

@@ -13,8 +13,8 @@ if (platform.node()=="minh-titan"):
     chdir(dirPath)
 
 chdir(dirPath)
-predictFileName = 'predicted_8107_20epochs.csv'
-testFileName = 'test_data_8107_20epochs.csv'
+predictFileName = 'predicted_8107_20epochs_regress.csv'
+testFileName = 'test_data_8107_20epochs_regress.csv'
 predictLength = 6
 prediction = []
 test = []
@@ -27,13 +27,11 @@ with open(testFileName, 'rb') as f:
     reader = csv.reader(f)
     test = list(reader)
 
-prediction=prediction[100:]
 processedPrediction = []
 for i in xrange(len(prediction)):
     for j in xrange(1,len(prediction[i])):
         processedPrediction.append([float(prediction[i][j])])
 
-test =test[100:]
 processedTest = []
 for i in xrange(len(test)):
     for j in xrange(1,len(test[i])):
@@ -45,7 +43,7 @@ for i in xrange(len(processedTest)):
          (float(processedPrediction[i])-float(processedTest[i]))
 rmse = np.sqrt(mse/len(processedTest))"""
 
-averageMSE = Algorithms.averageMSE(processedPrediction,processedTest,True)
+averageMSE = Algorithms.averageMSE(processedPrediction,processedTest,False)
 
 print('seq2seqLSTM RMSE: ', averageMSE)
 

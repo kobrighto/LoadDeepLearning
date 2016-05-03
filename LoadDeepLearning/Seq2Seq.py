@@ -25,6 +25,8 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Activation, TimeDistributedDense, RepeatVector
 from keras.layers import recurrent
 import numpy as np
+import DataPostProcessing
+import pandas as pd
 #from six.moves import range
 
 
@@ -60,80 +62,49 @@ class colors:
     close = '\033[0m'
 
 # Parameters for the model and dataset
-TRAINING_SIZE = 50000
 DIGITS = 3
-INVERT = True
-# Try replacing GRU, or SimpleRNN
+# Choices: GRU, SimpleRNN, LSTM
 RNN = recurrent.LSTM
 HIDDEN_SIZE = 128
 BATCH_SIZE = 128
-LAYERS = 1
-MAXLEN = DIGITS + 1 + DIGITS
+LAYERS = 2
+#MAXLEN = DIGITS + 1 + DIGITS
+MAXLEN = DIGITS * 12
+NB_EPOCHS = 200
 
-chars = '0123456789+ '
+chars = '0123456789'
 ctable = CharacterTable(chars, MAXLEN)
 
-questions = []
-expected = []
-seen = set()
+#questions = []
+#expected = []
+#seen = set()
 print('Generating data...')
-while len(questions) < TRAINING_SIZE:
-    f = lambda: int(''.join(np.random.choice(list('0123456789')) for i in range(np.random.randint(1, DIGITS + 1))))
-    a, b = f(), f()
-    # Skip any addition questions we've already seen
-    # Also skip any such that X+Y == Y+X (hence the sorting)
-    key = tuple(sorted((a, b)))
-    if key in seen:
-        continue
-    seen.add(key)
-    # Pad the data with spaces such that it is always MAXLEN
-    q = '{}+{}'.format(a, b)
-    query = q + ' ' * (MAXLEN - len(q))
-    ans = str(a + b)
-    # Answers can be of maximum size DIGITS + 1
-    ans += ' ' * (DIGITS + 1 - len(ans))
-    if INVERT:
-        query = query[::-1]
-    questions.append(query)
-    expected.append(ans)
-print('Total addition questions:', len(questions))
 
-print('Questions: ', questions)
+cpuList, memList = DataPostProcessing.meanLoad(8107,30)
+markPoint = int(0.9*len(cpuList))
+trainList = cpuList[:markPoint]
+testList = cpuList[markPoint:]
+X_to_train,y_to_train = DataPostProcessing.makeListSequence(trainList=trainList,trainingStep=1,inputvector=(1,12)
+                                                         ,labelvector=(1,6))
+X_to_test,y_to_test = DataPostProcessing.makeListSequence(trainList=testList,trainingStep=1,inputvector=(1,12)
+                                                       ,labelvector=(1,6))
 
 print('Vectorization...')
-X = np.zeros((len(questions), MAXLEN, len(chars)), dtype=np.bool)
-y = np.zeros((len(questions), DIGITS + 1, len(chars)), dtype=np.bool)
-print('X here 1: ', X)
-print('y here 1: ', y)
-for i, sentence in enumerate(questions):
-    X[i] = ctable.encode(sentence, maxlen=MAXLEN)
-for i, sentence in enumerate(expected):
-    y[i] = ctable.encode(sentence, maxlen=DIGITS + 1)
-print('X here 2: ', X)
-print('y here 2: ', y)
+X_train = np.zeros((len(X_to_train), MAXLEN, len(chars)), dtype=np.bool)
+y_train = np.zeros((len(y_to_train), DIGITS*6, len(chars)), dtype=np.bool)
 
-# Shuffle (X, y) in unison as the later parts of X will almost all be larger digits
-indices = np.arange(len(y))
-np.random.shuffle(indices)
-X = X[indices]
-y = y[indices]
+for i, sentence in enumerate(X_to_train):
+    X_train[i] = ctable.encode(sentence, maxlen=MAXLEN)
+for i, sentence in enumerate(y_to_train):
+    y_train[i] = ctable.encode(sentence, maxlen=DIGITS*6)
 
-# Explicitly set apart 10% for validation data that we never train over
-split_at = len(X) - len(X) / 10
-(X_train, X_val) = (X[:split_at],X[split_at:])
-#(X_train, X_val) = (slice_X(X, 0, split_at), slice_X(X, split_at))
-(y_train, y_val) = (y[:split_at], y[split_at:])
+X_test = np.zeros((len(X_to_test), MAXLEN, len(chars)), dtype=np.bool)
+y_test = np.zeros((len(y_to_test), DIGITS*6, len(chars)), dtype=np.bool)
 
-"""print(X_train.shape)
-print(y_train.shape)
-
-print(len(X_train), len(X_train[0]), len(X_train[0][0]))
-
-print('X_train: ', X_train)
-
-print('MAXLEN: ', MAXLEN)
-print('len(chars): ', len(chars))
-print('DIGITS: ', DIGITS)"""
+for i, sentence in enumerate(X_to_test):
+    X_test[i] = ctable.encode(sentence, maxlen=MAXLEN)
+for i, sentence in enumerate(y_to_test):
+    y_test[i] = ctable.encode(sentence, maxlen=DIGITS*6)
 
 print('Build model...')
 model = Sequential()
@@ -142,7 +113,7 @@ model = Sequential()
 # use input_shape=(None, nb_feature).
 model.add(RNN(HIDDEN_SIZE, input_shape=(MAXLEN, len(chars))))
 # For the decoder's input, we repeat the encoded input for each time step
-model.add(RepeatVector(DIGITS + 1))
+model.add(RepeatVector(DIGITS*6))
 # The decoder RNN could be multiple layers stacked or a single layer
 for _ in range(LAYERS):
     model.add(RNN(HIDDEN_SIZE, return_sequences=True))
@@ -154,47 +125,20 @@ model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy',
               optimizer='adam')
 
-print('X_train shape: ',X_train.shape)
-print('y_train.shape: ', y_train.shape)
+predictions = []
+realvalues = []
 
-print('X_train: ', X_train)
-print('X_val: ', X_val)
-print('y_train: ', y_train)
-print('y_val: ', y_val)
+model.fit(X_train,y_train,batch_size=BATCH_SIZE,nb_epoch=NB_EPOCHS, show_accuracy=True,
+          validation_data=(X_test,y_test))
 
-# Train the model each generation and show predictions against the validation dataset
-for iteration in range(1, 200):
-    print()
-    print('-' * 50)
-    print('Iteration', iteration)
-    model.fit(X_train, y_train, batch_size=BATCH_SIZE, nb_epoch=1,
-              validation_data=(X_val, y_val))
-    ###
-    # Select 10 samples from the validation set at random so we can visualize errors
-    for i in range(10):
-        ind = np.random.randint(0, len(X_val))
-        rowX, rowy = X_val[np.array([ind])], y_val[np.array([ind])]
+for i in xrange(len(X_test)):
+    rowX, rowy = X_test[np.array([i])], y_test[np.array([i])]
 
-        print('ctable: ', ctable)
+    preds = model.predict_classes(rowX,verbose=0)
+    correct = ctable.decode(rowy[0])
+    guess = ctable.decode(preds[0], calc_argmax=False)
+    predictions.append(str(guess))
+    realvalues.append(str(correct))
 
-        print('rowX: ', rowX)
-        print('rowY: ', rowy)
-
-        preds = model.predict_classes(rowX, verbose=0)
-
-        print('preds: ', preds)
-        print('preds shape:', preds.shape)
-
-        q = ctable.decode(rowX[0])
-        correct = ctable.decode(rowy[0])
-        guess = ctable.decode(preds[0], calc_argmax=False)
-
-        print('q: ', q)
-        print('correct: ', correct)
-        print('guess: ', guess)
-        #print('guess shape: ', guess.shape)
-
-        print('Q', q[::-1] if INVERT else q)
-        print('T', correct)
-        print(colors.ok + 'yes' + colors.close if correct == guess else colors.fail + 'no' + colors.close, guess)
-        print('---')
+pd.DataFrame(predictions).to_csv("predicted_8107_20epochs.csv")
+pd.DataFrame(realvalues).to_csv("test_data_8107_20epochs.csv")

@@ -253,7 +253,7 @@ def makeTrainTestLists_backup2(cpuList,memList,meanLabel,markPoint,length,times)
     return (finaltraincpuList,finaltrainmemList,finaltestcpuList,finaltestmemList,
             finaltraincpulabels,finaltrainmemlabels,finaltestcpulabels,finaltestmemlabels)
 
-trainList = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+"""trainList = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
 traincpu, trainlabels = makeListSequence(trainList,trainingStep=1,inputvector=[1,2],labelvector=[3,2])
 print('traincpu: ', traincpu)
-print('trainlabels: ', trainlabels)
+print('trainlabels: ', trainlabels)"""

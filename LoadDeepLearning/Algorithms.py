@@ -97,12 +97,12 @@ def percentOfRightPredictions(predictList, testList, errorLevel):
     percent = float(rightPredictions)/float(totalCount)
     return (percent*100)
 
-cpuList, memList = DataPostProcessing.meanLoad(3165,30)
+cpuList, memList = DataPostProcessing.meanLoad(9218,30)
 
 print(len(cpuList))
 print(len(memList))
 
-predictList,testList = autoRegression(cpuList,int(0.8*(len(cpuList))),7,6)
+predictList,testList = autoRegression(cpuList,int(0.9*(len(cpuList))),7,6)
 
 print('averageMSE of AR:', averageMSE(predictList, testList, False))
 
@@ -114,7 +114,7 @@ print('level 15: ',percentOfRightPredictions(predictList, testList, 15))
 
 #print('predictList length:', len(predictList))
 
-predictList, testList = ema(cpuList,int(0.8*(len(cpuList))),0.95,20,6)
+predictList, testList = ema(cpuList,int(0.9*(len(cpuList))),0.95,20,6)
 
 print('averageMSE of EMA:', averageMSE(predictList, testList, False))
 

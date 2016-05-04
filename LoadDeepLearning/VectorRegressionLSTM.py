@@ -35,9 +35,9 @@ cpuList, memList = DataPostProcessing.meanLoad(9218,30)
 markPoint = int(0.9*len(cpuList))
 trainList = cpuList[:markPoint]
 testList = cpuList[markPoint:]
-X_train,y_train = DataPostProcessing.makeTrainorTestList(trainList=trainList,trainingStep=1,inputvector=(6,6)
+X_train,y_train = DataPostProcessing.makeTrainorTestList(trainList=trainList,trainingStep=1,inputvector=(3,6)
                                                          ,labelvector=(1,6))
-X_test,y_test = DataPostProcessing.makeTrainorTestList(trainList=testList,trainingStep=1,inputvector=(6,6)
+X_test,y_test = DataPostProcessing.makeTrainorTestList(trainList=testList,trainingStep=1,inputvector=(3,6)
                                                        ,labelvector=(1,6))
 
 print ('Evaluate seq2seqLSTM...')

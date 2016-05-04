@@ -1,12 +1,8 @@
-__author__ = 'Minh'
-
-import platform
-from os import listdir, chdir, path
+from random import randint
 import csv
-import sys
-import math
+from os import listdir, chdir, path
+from random import sample
 
-def plus(a,b):
-    return (a+b)
-
-print (plus(a=0,b=1))
+#Total number of machine lines: 12583
+sample_moments = sample(xrange(1,12584),10)
+print(sample_moments)

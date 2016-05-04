@@ -13,8 +13,8 @@ if (platform.node()=="minh-titan"):
     chdir(dirPath)
 
 chdir(dirPath)
-predictFileName = 'predicted_8107_20epochs.csv'
-testFileName = 'test_data_8107_20epochs.csv'
+predictFileName = 'predicted_6666_100epochs_seq.csv'
+testFileName = 'test_data_6666_100epochs_seqcsv'
 predictLength = 6
 prediction = []
 test = []

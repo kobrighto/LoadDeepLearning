@@ -69,8 +69,8 @@ HIDDEN_SIZE = 128
 BATCH_SIZE = 128
 LAYERS = 2
 #MAXLEN = DIGITS + 1 + DIGITS
-MAXLEN = DIGITS * 12
-NB_EPOCHS = 200
+MAXLEN = DIGITS * 6
+NB_EPOCHS = 100
 
 chars = '0123456789'
 ctable = CharacterTable(chars, MAXLEN)
@@ -80,13 +80,13 @@ ctable = CharacterTable(chars, MAXLEN)
 #seen = set()
 print('Generating data...')
 
-cpuList, memList = DataPostProcessing.meanLoad(8107,30)
+cpuList, memList = DataPostProcessing.meanLoad(6666,30)
 markPoint = int(0.9*len(cpuList))
 trainList = cpuList[:markPoint]
 testList = cpuList[markPoint:]
-X_to_train,y_to_train = DataPostProcessing.makeListSequence(trainList=trainList,trainingStep=1,inputvector=(1,12)
+X_to_train,y_to_train = DataPostProcessing.makeListSequence(trainList=trainList,trainingStep=1,inputvector=(1,6)
                                                          ,labelvector=(1,6))
-X_to_test,y_to_test = DataPostProcessing.makeListSequence(trainList=testList,trainingStep=1,inputvector=(1,12)
+X_to_test,y_to_test = DataPostProcessing.makeListSequence(trainList=testList,trainingStep=1,inputvector=(1,6)
                                                        ,labelvector=(1,6))
 
 print('Vectorization...')
@@ -140,5 +140,5 @@ for i in xrange(len(X_test)):
     predictions.append(str(guess))
     realvalues.append(str(correct))
 
-pd.DataFrame(predictions).to_csv("predicted_8107_20epochs.csv")
-pd.DataFrame(realvalues).to_csv("test_data_8107_20epochs.csv")
+pd.DataFrame(predictions).to_csv("predicted_6666_100epochs_seq.csv")
+pd.DataFrame(realvalues).to_csv("test_data_6666_100epochs_seq.csv")

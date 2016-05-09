@@ -7,12 +7,12 @@ from time import gmtime, strftime
 
 #Total number of machine lines: 12583
 #sample_moments = sample(xrange(1,12584),50)
-
+dirPath66 = '/home/minh/Desktop/Google_Data/processed/Input6-6'
 dirPath46 = '/home/minh/Desktop/Google_Data/processed/Input4-6'
 dirPath36 = '/home/minh/Desktop/Google_Data/processed/Input3-6'
 dirPath26 = '/home/minh/Desktop/Google_Data/processed/Input2-6'
 dirPath16 = '/home/minh/Desktop/Google_Data/processed/Input1-6'
-dirPath66 = '/home/minh/Desktop/Google_Data/processed/Input6-6'
+
 
 if (platform.node() == "woosungpil-PC"):
     dirPath = 'C:\Users\woosungpil\Desktop\Rawdata'

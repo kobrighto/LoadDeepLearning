@@ -6,16 +6,16 @@ import csv
 import sys
 import numpy as np
 
-if (platform.node() == "woosungpil-PC"):
+"""if (platform.node() == "woosungpil-PC"):
     dirPath = 'C:\Users\woosungpil\Desktop\Rawdata'
 elif (platform.node()=="minh-titan"):
     dirPath = '/home/minh/Desktop/Google_Data/processed'
 elif (platform.node()=="Minh_Desktop1"):
-    dirPath = 'E:\Google_Data\processed'
+    dirPath = 'E:\Google_Data\processed'"""
 
 def sampling(lineNo, noOfMinutes):
     csv.field_size_limit(sys.maxint)
-    chdir(dirPath)
+    #chdir(dirPath)
     lineCount = 1
     cpuList = []
     memList = []
@@ -49,7 +49,7 @@ def sampling(lineNo, noOfMinutes):
 
 def meanLoad(lineNo, noOfMinutes):
     csv.field_size_limit(sys.maxint)
-    chdir(dirPath)
+    #chdir(dirPath)
     lineCount = 1
     cpuList = []
     memList = []

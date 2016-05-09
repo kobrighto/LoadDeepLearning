@@ -5,6 +5,7 @@ from os import chdir,listdir
 import platform
 from time import gmtime, strftime
 import matplotlib.pyplot as plt
+import Algorithms
 
 dirPath66 = '/home/minh/Desktop/Google_Data/processed/Input6-6'
 dirPath56 = '/home/minh/Desktop/Google_Data/processed/Input5-6'
@@ -32,17 +33,42 @@ def plot2Lines(predictList, predictListname, secondList, secondListname):
     plt.legend([predictListname, secondListname], loc='upper left')
     plt.show()
 
-rmse16 = [0]*500
+sample_moments = []
+with open('/home/minh/Desktop/Google_Data/processed/sample_moments.csv', 'rb') as f:
+    reader = csv.reader(f)
+    for line in reader:
+        sample_moments = line
+
+mse16 = [0]*500
 for fileName in listdir(dirPath16):
-    if fileName.startswith('predicted'):
+    if fileName.startswith('predicted_LSTM_2180'):
+        pass
+    elif fileName.startswith('predicted'):
         with open(dirPath16+'/'+fileName,'r') as f:
             reader = csv.reader(f)
             for line in reader:
                 if line[0]=='val_loss':
                     for i in xrange(1,len(line)):
-                        rmse16[i-1]+=float(line[i])
+                        mse16[i-1]+=float(line[i])
 
-for i in xrange(len(rmse16)):
-    rmse16[i]/=50
+for i in xrange(len(mse16)):
+    mse16[i]/=49
 
-plotLines([(rmse16[100:],'rmse16')],['b-'])
+"""sample_moments.remove('2180')
+mseEMA = 0
+mseEMAresults = []
+
+for i in xrange(len(sample_moments)):
+    realValueList,predictList = Algorithms.ema(lineNumber=int(sample_moments[i]), meanLoad=30, trainingPercent=0.9,
+                                               trainingStep=1,inputvector=(1,6), labelvector=(1,6),
+                                               weight=0.95, lag=10)
+    curEMA = Algorithms.averageMSE(predictList,realValueList,False)
+    mseEMA+=curEMA
+    mseEMAresults.append(curEMA)
+    print('len: ', len(mseEMAresults))
+    print('last mseEMA result: ', curEMA)
+mseEMA/=49
+mseEMAList = [mseEMA]*500"""
+
+#plotLines([(mse16,'mse16'),(mseEMAList,'mseEMA')],['b-','r-'])
+plotLines([(mse16[100:],'mse16')],['b-'])

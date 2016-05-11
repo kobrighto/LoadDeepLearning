@@ -13,12 +13,11 @@ from keras.layers import recurrent
 from keras.initializations import normal, identity
 
 def VecAR(lineNumber,meanLoad,trainingPercent,trainingStep,inputvector,labelvector,in_neurons,out_neurons,
-          hidden_neurons,batchsize,nb_epochs,dropRate,activation,loss,optimizer):
+          hidden_neurons,batchsize,nb_epochs,dropRate,activation,loss,optimizer,modelName):
     modelType = None
-    modelName = "LSTM"
     if modelName == "LSTM":
         modelType = recurrent.LSTM
-    elif modelName == "RNN":
+    elif modelName == "iRNN":
         modelType = recurrent.SimpleRNN
     elif modelName == "GRU":
         modelType = recurrent.GRU
@@ -42,6 +41,7 @@ def VecAR(lineNumber,meanLoad,trainingPercent,trainingStep,inputvector,labelvect
     settings.append("activation: " + str(activation))
     settings.append("loss: " + str(loss))
     settings.append("optimizer: " + str(optimizer))
+    settings.append("modelName: " + str(modelName))
 
     cpuList, memList = Utilities.meanLoad(lineNumber,meanLoad)
 
@@ -54,10 +54,15 @@ def VecAR(lineNumber,meanLoad,trainingPercent,trainingStep,inputvector,labelvect
                                                            ,labelvector=labelvector)
 
     model = Sequential()
-
-    model.add(modelType(input_dim=in_neurons,output_dim=hidden_neurons,return_sequences=True))
-
-    model.add(modelType(input_dim=hidden_neurons,output_dim=hidden_neurons,return_sequences=False))
+    if modelType == recurrent.SimpleRNN:
+        print('iRNN running')
+        model.add(modelType(input_dim=in_neurons,output_dim=hidden_neurons,
+                            init=lambda shape: normal(shape, scale=0.001),
+                            inner_init=lambda shape: identity(shape, scale=1.0),
+                            return_sequences=False))
+    else:
+        print('GRU or LSTM running')
+        model.add(modelType(input_dim=in_neurons,output_dim=hidden_neurons,return_sequences=False))
     model.add(Dropout(dropRate))
 
     model.add(Dense(input_dim=hidden_neurons,output_dim=out_neurons))

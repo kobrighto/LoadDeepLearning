@@ -10,6 +10,60 @@ from pandas import ewma
 import platform
 import Utilities
 
+def regressiveStep(inputList, paramsList, numOfSteps):
+    #paramsList_reverse = paramsList[::-1]
+    tempList = []
+    for i in xrange(len(inputList)):
+        tempList.append(inputList[i])
+    predictionList = []
+    for i in xrange(numOfSteps):
+        prediction = 0
+        for i in xrange(len(paramsList)):
+            if i==0:
+                prediction+=paramsList[i]
+            else:
+                prediction+=paramsList[i]*tempList[len(tempList)-i]
+        tempList.append(prediction)
+        predictionList.append(prediction)
+    return predictionList
+
+def regress(trainList,lag):
+    ar_mod = AR(trainList)
+    if lag<=0:
+        ar_res = ar_mod.fit()
+    else:
+        ar_res = ar_mod.fit(lag)
+    ar_res = ar_res.params
+    return ar_res
+
+def autoRegression(lineNumber, meanLoad, trainingPercent, trainingStep, inputvector, labelvector, lag):
+    if (platform.node() == "woosungpil-PC"):
+        dirPath = 'C:\Users\woosungpil\Desktop\Rawdata'
+    elif (platform.node()=="minh-titan"):
+        dirPath = '/home/minh/Desktop/Google_Data/processed/'
+    elif (platform.node()=="Minh_Desktop1"):
+        dirPath = 'E:\Google_Data\processed'
+    chdir(dirPath)
+    cpuList,memList = Utilities.meanLoad(lineNumber,meanLoad)
+
+    markPoint = int(trainingPercent*len(cpuList))
+    trainList = cpuList[:markPoint]
+
+    numOfSteps = labelvector[1]
+    ar_res = regress(trainList,lag)
+
+    startPoint = markPoint + inputvector[0]*inputvector[1]-1
+    realValueList = []
+    predictList = []
+    for i in xrange(startPoint,len(cpuList)-labelvector[1]):
+        curReal = []
+        for j in xrange(numOfSteps):
+            curReal.append(cpuList[i+j])
+        curPredict = regressiveStep(cpuList[:startPoint],ar_res,numOfSteps)
+        realValueList.append(curReal)
+        predictList.append(curPredict)
+    return(realValueList,predictList)
+
 def emaStep(testList, weight, lag, numOfSteps):
     resultList = []
     tempList = []

@@ -35,7 +35,7 @@ def plot2Lines(predictList, predictListname, secondList, secondListname):
     plt.show()
 
 sample_moments = []
-with open('/home/minh/Desktop/Google_Data/processed/sample_moments.csv', 'rb') as f:
+with open('/home/minh/Desktop/Google_Data/processed/sample_moments_30.csv', 'rb') as f:
     reader = csv.reader(f)
     for line in reader:
         sample_moments = line
@@ -57,7 +57,7 @@ for i in xrange(len(mse16)):
 
 mseResults = []
 
-for i in xrange(len(dirPathList)):
+"""for i in xrange(len(dirPathList)):
     curmse = [0]*500
     for fileName in listdir(dirPathList[i]):
         if fileName.startswith('predicted_LSTM_2180'):
@@ -71,7 +71,7 @@ for i in xrange(len(dirPathList)):
                             curmse[j-1]+=float(line[j])
     for i in xrange(len(curmse)):
         curmse[i]/=49
-    mseResults.append(curmse)
+    mseResults.append(curmse)"""
 
 
 """sample_moments.remove('2180')
@@ -90,7 +90,7 @@ for i in xrange(len(sample_moments)):
 mseEMA/=49
 mseEMAList = [mseEMA]*500"""
 
-sample_moments.remove('2180')
+"""sample_moments.remove('2180')
 mseAR = 0
 mseARresults = []
 
@@ -104,9 +104,9 @@ for i in xrange(len(sample_moments)):
     print('len: ', len(mseARresults))
     print('last mseEMA result: ', curAR)
 mseAR/=49
-mseARList = [mseAR]*500
+mseARList = [mseAR]*500"""
 
-plotLines([(mseResults[0],'mse16'),(mseARList,'mseAR')],['b-','r-'])
+#plotLines([(mseResults[0],'mse16'),(mseARList,'mseAR')],['b-','r-'])
 """plotLines([(mseResults[0][100:],'mse16'),(mseResults[1][100:],'mse26'),(mseResults[2][100:],'mse36'),
            (mseResults[3][100:],'mse46'),(mseResults[4][100:],'mse56'),(mseResults[5][100:],'mse66')],
           ['b-','r-','g-','c-','m-','y-'])"""

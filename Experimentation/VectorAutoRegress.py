@@ -12,8 +12,8 @@ from keras.layers.core import Dense, Activation, Dropout
 from keras.layers import recurrent
 from keras.initializations import normal, identity
 
-def VecAR(lineNumber,meanLoad,trainingPercent,trainingStep,inputvector,labelvector,in_neurons,out_neurons,
-          hidden_neurons,batchsize,nb_epochs,dropRate,activation,loss,optimizer,modelName):
+def VecAR(lineNumber,meanLoad,modelName,trainingPercent,trainingStep,inputvector,labelvector,in_neurons,out_neurons,
+          hidden_neurons,batchsize,nb_epochs,dropRate,activation,loss,optimizer):
     modelType = None
     if modelName == "LSTM":
         modelType = recurrent.LSTM
@@ -28,6 +28,7 @@ def VecAR(lineNumber,meanLoad,trainingPercent,trainingStep,inputvector,labelvect
 
     settings.append("lineNumber: " + str(lineNumber))
     settings.append("meanLoad: " + str(meanLoad))
+    settings.append("modelName: " + str(modelName))
     settings.append("trainingPercent: " + str(trainingPercent))
     settings.append("trainingStep: " + str(trainingStep))
     settings.append("inputvector: " + str(inputvector))
@@ -41,7 +42,6 @@ def VecAR(lineNumber,meanLoad,trainingPercent,trainingStep,inputvector,labelvect
     settings.append("activation: " + str(activation))
     settings.append("loss: " + str(loss))
     settings.append("optimizer: " + str(optimizer))
-    settings.append("modelName: " + str(modelName))
 
     cpuList, memList = Utilities.meanLoad(lineNumber,meanLoad)
 
@@ -55,13 +55,11 @@ def VecAR(lineNumber,meanLoad,trainingPercent,trainingStep,inputvector,labelvect
 
     model = Sequential()
     if modelType == recurrent.SimpleRNN:
-        print('iRNN running')
         model.add(modelType(input_dim=in_neurons,output_dim=hidden_neurons,
                             init=lambda shape: normal(shape, scale=0.001),
                             inner_init=lambda shape: identity(shape, scale=1.0),
                             return_sequences=False))
     else:
-        print('GRU or LSTM running')
         model.add(modelType(input_dim=in_neurons,output_dim=hidden_neurons,return_sequences=False))
     model.add(Dropout(dropRate))
 

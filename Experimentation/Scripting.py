@@ -15,6 +15,7 @@ dirPath26 = '/home/minh/Desktop/Google_Data/processed/GRU2-6'
 dirPath13 = '/home/minh/Desktop/Google_Data/processed/GRU1-3'
 dirPath23 = '/home/minh/Desktop/Google_Data/processed/GRU2-3'
 dirPath112 = '/home/minh/Desktop/Google_Data/processed/GRU1-12'
+dirPath212 = '/home/minh/Desktop/Google_Data/processed/GRU2-12'
 
 
 if (platform.node() == "woosungpil-PC"):
@@ -42,7 +43,25 @@ print('length sample_moments: ', len(sample_moments))
 for i in xrange(len(sample_moments)):
     var.VecAR(lineNumber=int(sample_moments[i]),meanLoad=30,modelName="GRU",trainingPercent=0.9,trainingStep=1,
               inputvector=(2,6),labelvector=(1,6),in_neurons=6,out_neurons=6,hidden_neurons=100,batchsize=5,
-              nb_epochs=2000,dropRate=0.5,activation="linear",loss="mean_squared_error",optimizer="rmsprop")"""
+              nb_epochs=2000,dropRate=0.5,activation="linear",loss="mean_squared_error",optimizer="rmsprop")
+
+chdir(dirPath13)
+for i in xrange(len(sample_moments)):
+    var.VecAR(lineNumber=int(sample_moments[i]),meanLoad=30,modelName="GRU",trainingPercent=0.9,trainingStep=1,
+              inputvector=(1,3),labelvector=(1,6),in_neurons=3,out_neurons=6,hidden_neurons=100,batchsize=5,
+              nb_epochs=2000,dropRate=0.5,activation="linear",loss="mean_squared_error",optimizer="rmsprop")
+
+chdir(dirPath23)
+for i in xrange(len(sample_moments)):
+    var.VecAR(lineNumber=int(sample_moments[i]),meanLoad=30,modelName="GRU",trainingPercent=0.9,trainingStep=1,
+              inputvector=(2,3),labelvector=(1,6),in_neurons=3,out_neurons=6,hidden_neurons=100,batchsize=5,
+              nb_epochs=2000,dropRate=0.5,activation="linear",loss="mean_squared_error",optimizer="rmsprop")
+
+chdir(dirPath112)
+for i in xrange(len(sample_moments)):
+    var.VecAR(lineNumber=int(sample_moments[i]),meanLoad=30,modelName="GRU",trainingPercent=0.9,trainingStep=1,
+              inputvector=(1,12),labelvector=(1,6),in_neurons=12,out_neurons=6,hidden_neurons=100,batchsize=5,
+              nb_epochs=2000,dropRate=0.5,activation="linear",loss="mean_squared_error",optimizer="rmsprop")
 
 chdir(dirPath36)
 for i in xrange(len(sample_moments)):
@@ -66,24 +85,12 @@ chdir(dirPath66)
 for i in xrange(len(sample_moments)):
     var.VecAR(lineNumber=int(sample_moments[i]),meanLoad=30,modelName="GRU",trainingPercent=0.9,trainingStep=1,
               inputvector=(6,6),labelvector=(1,6),in_neurons=6,out_neurons=6,hidden_neurons=100,batchsize=5,
-              nb_epochs=2000,dropRate=0.5,activation="linear",loss="mean_squared_error",optimizer="rmsprop")
+              nb_epochs=2000,dropRate=0.5,activation="linear",loss="mean_squared_error",optimizer="rmsprop")"""
 
-chdir(dirPath13)
+chdir(dirPath212)
 for i in xrange(len(sample_moments)):
     var.VecAR(lineNumber=int(sample_moments[i]),meanLoad=30,modelName="GRU",trainingPercent=0.9,trainingStep=1,
-              inputvector=(1,3),labelvector=(1,6),in_neurons=3,out_neurons=6,hidden_neurons=100,batchsize=5,
-              nb_epochs=2000,dropRate=0.5,activation="linear",loss="mean_squared_error",optimizer="rmsprop")
-
-chdir(dirPath23)
-for i in xrange(len(sample_moments)):
-    var.VecAR(lineNumber=int(sample_moments[i]),meanLoad=30,modelName="GRU",trainingPercent=0.9,trainingStep=1,
-              inputvector=(2,3),labelvector=(1,6),in_neurons=3,out_neurons=6,hidden_neurons=100,batchsize=5,
-              nb_epochs=2000,dropRate=0.5,activation="linear",loss="mean_squared_error",optimizer="rmsprop")
-
-chdir(dirPath112)
-for i in xrange(len(sample_moments)):
-    var.VecAR(lineNumber=int(sample_moments[i]),meanLoad=30,modelName="GRU",trainingPercent=0.9,trainingStep=1,
-              inputvector=(1,12),labelvector=(1,6),in_neurons=12,out_neurons=6,hidden_neurons=100,batchsize=5,
+              inputvector=(2,12),labelvector=(1,6),in_neurons=12,out_neurons=6,hidden_neurons=100,batchsize=5,
               nb_epochs=2000,dropRate=0.5,activation="linear",loss="mean_squared_error",optimizer="rmsprop")
 
 #Example:

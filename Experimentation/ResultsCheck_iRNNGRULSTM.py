@@ -16,12 +16,13 @@ count = 0
 mseLSTMResult = [0]*3000
 
 for fileName in listdir(dirPathLSTM):
-    with open(dirPathLSTM+'/'+fileName,'r') as f:
-        reader = csv.reader(f)
-        for line in reader:
-            if line[0]=='val_loss':
-                for j in xrange(1,len(line)):
-                    mseLSTMResult[j-1]+=float(line[j])
+    if fileName.startswith('predicted'):
+        with open(dirPathLSTM+'/'+fileName,'r') as f:
+            reader = csv.reader(f)
+            for line in reader:
+                if line[0]=='val_loss':
+                    for j in xrange(1,len(line)):
+                        mseLSTMResult[j-1]+=float(line[j])
 for i in xrange(len(mseLSTMResult)):
     mseLSTMResult[i]/=30
 
@@ -29,12 +30,13 @@ count = 0
 mseiRNNResult = [0]*3000
 
 for fileName in listdir(dirPathiRNN):
-    with open(dirPathiRNN+'/'+fileName,'r') as f:
-        reader = csv.reader(f)
-        for line in reader:
-            if line[0]=='val_loss':
-                for j in xrange(1,len(line)):
-                    mseiRNNResult[j-1]+=float(line[j])
+    if fileName.startswith('predicted'):
+        with open(dirPathiRNN+'/'+fileName,'r') as f:
+            reader = csv.reader(f)
+            for line in reader:
+                if line[0]=='val_loss':
+                    for j in xrange(1,len(line)):
+                        mseiRNNResult[j-1]+=float(line[j])
 for i in xrange(len(mseiRNNResult)):
     mseiRNNResult[i]/=30
 
@@ -42,12 +44,13 @@ count = 0
 mseGRUResult = [0]*3000
 
 for fileName in listdir(dirPathGRU):
-    with open(dirPathGRU+'/'+fileName,'r') as f:
-        reader = csv.reader(f)
-        for line in reader:
-            if line[0]=='val_loss':
-                for j in xrange(1,len(line)):
-                    mseGRUResult[j-1]+=float(line[j])
+    if fileName.startswith('predicted'):
+        with open(dirPathGRU+'/'+fileName,'r') as f:
+            reader = csv.reader(f)
+            for line in reader:
+                if line[0]=='val_loss':
+                    for j in xrange(1,len(line)):
+                        mseGRUResult[j-1]+=float(line[j])
 for i in xrange(len(mseGRUResult)):
     mseGRUResult[i]/=30
 

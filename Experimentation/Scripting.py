@@ -28,7 +28,7 @@ chdir(dirPath)
 
 sample_moments = []
 
-with open('sample_moments_30.csv', 'rb') as f:
+with open('sample_moments_1000.csv', 'rb') as f:
     reader = csv.reader(f)
     for line in reader:
         sample_moments = line

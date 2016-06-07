@@ -34,11 +34,11 @@ def plot2Lines(predictList, predictListname, secondList, secondListname):
     plt.legend([predictListname, secondListname], loc='upper left')
     plt.show()
 
-sample_moments = []
+"""sample_moments = []
 with open('/home/minh/Desktop/Google_Data/processed/sample_moments_30.csv', 'rb') as f:
     reader = csv.reader(f)
     for line in reader:
-        sample_moments = line
+        sample_moments = line"""
 
 """mse16 = [0]*500
 for fileName in listdir(dirPath16):

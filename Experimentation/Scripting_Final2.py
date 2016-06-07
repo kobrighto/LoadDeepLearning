@@ -7,19 +7,19 @@ from time import gmtime, strftime
 
 #Total number of machine lines: 12583
 #sample_moments = sample(xrange(1,12584),50)
-dirPathFinal = '/home/minh/Desktop/Google_Data/processed/GRU1-3(big)'
+dirPathFinal = '/home/minh/Desktop/Google_Data/processed2/GRU1-3(big2)'
 
 if (platform.node() == "woosungpil-PC"):
     dirPath = 'C:\Users\woosungpil\Desktop\Rawdata'
 elif (platform.node()=="minh-titan"):
-    dirPath = '/home/minh/Desktop/Google_Data/processed/'
+    dirPath = '/home/minh/Desktop/Google_Data/processed2/'
 elif (platform.node()=="Minh_Desktop1"):
     dirPath = 'E:\Google_Data\processed'
 chdir(dirPath)
 
 sample_moments = []
 
-with open('sample_moments_500.csv', 'rb') as f:
+with open('sample_moments_500_second.csv', 'rb') as f:
     reader = csv.reader(f)
     for line in reader:
         sample_moments = line

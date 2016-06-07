@@ -1,3 +1,4 @@
+
 import pandas as pd
 from random import random
 from os import listdir, chdir, path
@@ -71,7 +72,7 @@ def VecAR(lineNumber,meanLoad,modelName,trainingPercent,trainingStep,inputvector
 
     print ('Evaluate seq2seqLSTM...')
 
-    hist = model.fit(X_train, y_train, batch_size=batchsize, nb_epoch=nb_epochs, show_accuracy=True,
+    hist = model.fit(X_train, y_train, batch_size=batchsize, nb_epoch=nb_epochs, show_accuracy=True, verbose=2,
               validation_data=(X_test,y_test))
 
     predicted = model.predict(X_test)

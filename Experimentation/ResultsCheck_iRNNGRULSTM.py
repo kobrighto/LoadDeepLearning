@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 import ResultsCheck
 import numpy as np
 
-dirPathGRU = '/home/minh/Desktop/Google_Data/processed/GRU1-6'
-dirPathiRNN = '/home/minh/Desktop/Google_Data/processed/iRNN1-6'
-dirPathLSTM = '/home/minh/Desktop/Google_Data/processed/LSTM1-6'
+dirPathGRU = '/home/minh/Desktop/Google_Data/processed/GRU1-3'
+dirPathiRNN = '/home/minh/Desktop/Google_Data/processed/iRNN1-3'
+dirPathLSTM = '/home/minh/Desktop/Google_Data/processed/LSTM1-3'
 
 count = 0
 mseLSTMResult = [0]*3000
@@ -58,18 +58,22 @@ npLSTM = np.array(mseLSTMResult)
 npGRU = np.array(mseGRUResult)
 npiRNN = np.array(mseiRNNResult)
 
-for i in xrange(100,2901,200):
-    print('iRNN mean from ', i, ' to ', (i+200), ' is: ', np.mean(npiRNN[i:(i+200)]))
-    print('GRU mean from ', i, ' to ', (i+200), ' is: ', np.mean(npGRU[i:(i+200)]))
-    print('LSTM mean from ', i, ' to ', (i+200), ' is: ', np.mean(npLSTM[i:(i+200)]))
-    print('iRNN variance from ', i, ' to ', (i+200), ' is: ', np.var(npiRNN[i:(i+200)]))
-    print('GRU variance from ', i, ' to ', (i+200), ' is: ', np.var(npGRU[i:(i+200)]))
-    print('LSTM variance from ', i, ' to ', (i+200), ' is: ', np.var(npLSTM[i:(i+200)]))
+startPoint = 100
+endPoint = 2901
+step = 100
+
+for i in xrange(startPoint,endPoint,step):
+    print('iRNN mean from ', i, ' to ', (i+step), ' is: ', np.mean(npiRNN[i:(i+step)]))
+    print('GRU mean from ', i, ' to ', (i+step), ' is: ', np.mean(npGRU[i:(i+step)]))
+    print('LSTM mean from ', i, ' to ', (i+step), ' is: ', np.mean(npLSTM[i:(i+step)]))
+    print('iRNN variance from ', i, ' to ', (i+step), ' is: ', np.var(npiRNN[i:(i+step)]))
+    print('GRU variance from ', i, ' to ', (i+step), ' is: ', np.var(npGRU[i:(i+step)]))
+    print('LSTM variance from ', i, ' to ', (i+step), ' is: ', np.var(npLSTM[i:(i+step)]))
     print('')
 
 """print('iRNN mean: ', np.mean(npiRNN), ', and variance: ', np.var(npiRNN[500:3000]))
 print('GRU mean: ', np.mean(npGRU), ', and variance: ', np.var(npGRU[500:3000]))
 print('LSTM mean: ', np.mean(npLSTM), ', and variance: ', np.var(npLSTM[500:3000]))"""
 
-ResultsCheck.plotLines([(mseiRNNResult,'mseiRNN'),(mseGRUResult,'mseGRU'),
-                        (mseLSTMResult,'mseLSTM')],['b-','r-','m-'])
+"""ResultsCheck.plotLines([(mseiRNNResult,'mseiRNN'),(mseGRUResult,'mseGRU'),
+                        (mseLSTMResult,'mseLSTM')],['b-','r-','m-'])"""
